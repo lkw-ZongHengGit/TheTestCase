@@ -3,11 +3,15 @@ package com.atguigu.gmall.user.bean;
 import lombok.Data;
 import org.apache.logging.log4j.util.Strings;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Data
 public class UmsMember {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;//
     private Integer member_level_id;
     private String username;
