@@ -57,6 +57,16 @@
             <version>2.0.3.RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <!--AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
 
 
     </dependencies>

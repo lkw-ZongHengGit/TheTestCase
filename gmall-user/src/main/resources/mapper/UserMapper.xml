@@ -7,4 +7,10 @@
     <select id="selectAllUser" resultType="com.atguigu.gmall.user.bean.UmsMember">
          select * From ums_member
     </select>
+
+    <insert id="insertWareInfo" parameterType="com.atguigu.gmall.user.bean.WareInfo" >
+       insert into wms_ware_info (id,name,address,areacode)value (#{id},#{name},#{address},#{aredCode})
+    </insert>
+
+
 </mapper>

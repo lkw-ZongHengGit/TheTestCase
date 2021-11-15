@@ -14,4 +14,5 @@ public class User {
         this.name = name;
         this.num = num;
     }
+
 }

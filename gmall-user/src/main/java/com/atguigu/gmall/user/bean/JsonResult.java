@@ -64,5 +64,13 @@ public class JsonResult<T> {
         this.msg = msg;
     }
 
-    // 省略get和set方法
+    @Override
+    public String toString() {
+        return "JsonResult{" +
+                "data=" + data +
+                ", code='" + code + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
+// 省略get和set方法
 }

@@ -13,13 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/*
+* 测试 全局异常的配置，如有报错，别介意，就为了验证报错是否被@ControllerAdvice拦截
+* */
 @RestController
 @RequestMapping("/exception")
 public class ExceptionCaseDemoController {
 
     private static final Logger logger =   LoggerFactory.getLogger(ExceptionCaseDemoController.class);
-
 /*
 * 参数缺失
 * */
@@ -30,7 +31,6 @@ public class ExceptionCaseDemoController {
         logger.info("pass:{}",pass);
         return new JsonResult();
     }
-
     /*
     数组越界异常
     * */

@@ -18,10 +18,8 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 @ResponseBody
 public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     /*
-     *缺少参数异常
-     *
+     *缺少参数异常*
      * */
     //@ExceptionHandler({MissingServletRequestPartException.class})
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -29,13 +27,10 @@ public class GlobalExceptionHandler {
     public JsonResult handlerHttpMassageNoReadableExcepthon(MissingServletRequestParameterException ex) {
         logger.error("缺少请求参数，{}", ex.getMessage());
         return new JsonResult("400", "缺少必要的请求参数");
-
     }
-
     /*
     * 空指针异常
     * */
-
     @ExceptionHandler(NullPointerException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public JsonResult handleTypeMismatchException(NullPointerException ex){
@@ -72,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public JsonResult handleExcption(Exception ex){
-        logger.error("数组越界异常：{}",ex.getMessage());
+        logger.error("异常：{}",ex.getMessage());
         return new JsonResult("502","出现了统一异常");
     }
 
