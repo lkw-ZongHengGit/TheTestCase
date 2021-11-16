@@ -1,12 +1,19 @@
 package com.atguigu.gmall.user.controller;
 
+
+import com.alibaba.fastjson.JSON;
 import com.atguigu.gmall.user.bean.JsonResult;
 import com.atguigu.gmall.user.bean.UmsMember;
+import com.atguigu.gmall.user.bean.User;
+import com.atguigu.gmall.user.retention.UnInterception;
+
+import com.atguigu.gmall.user.service.RedisService;
 import com.sun.deploy.net.HttpResponse;
 import com.sun.deploy.net.URLEncoder;
 import jdk.nashorn.internal.ir.CallNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +32,13 @@ import java.util.List;
 @RequestMapping("/TestDemo")
 public class TestController {
 
+    @Autowired
+    private RedisService redisService;
+
     private static final Logger logger = LoggerFactory.getLogger(TestController.class);
 
     @GetMapping("/simmpleDemo")
+    @UnInterception
     public String simmpleDemo(){
         logger.debug("====测试日志debug级别打印====");
         logger.info("====测试日志info级别打印====");
@@ -50,6 +61,7 @@ public class TestController {
     public JsonResult getServletContextCach(HttpServletRequest request){
         ServletContext servletContext = request.getServletContext();
        List<UmsMember>  list= (List<UmsMember>) servletContext.getAttribute("umsMemberList");
+
         return new JsonResult(list);
     }
 
@@ -100,6 +112,32 @@ public class TestController {
         logger.info("requestListener中的初始化的name数据：{}", request.getAttribute("name"));
         return "SUSSESS";
 
+    }
+
+
+    @RequestMapping("getRequestInfos")
+    @UnInterception
+    public JsonResult getRequestInfos(HttpServletRequest request){
+        //操作String类型
+        redisService.setString("weichat","程序员私房菜");
+        System.out.println("我的公众号："+redisService.getString("weichat"));
+        //如果是实体，试着用json工具转成json字符串
+        User user = new User(1, "张飞", "法外狂徒");
+        redisService.setString("UserInfo", JSON.toJSONString(user));
+        System.out.println("用户信息：{}"+redisService.getString("UserInfo"));
+
+        //操作Hash类型
+        redisService.setHash("user","name",JSON.toJSONString(user));
+        logger.info("用户姓名：{}",redisService.getHash("user","name"));
+
+        //操作List类型
+        redisService.setList("list","football");
+        redisService.setList("list","basketball");
+        List<String> list = redisService.getList("list", 0, -1);
+        for(String value:list){
+            logger.info("list中有：{}",value);
+        }
+        return new JsonResult(redisService.getString("UserInfo"));
     }
 
 }

@@ -8,7 +8,8 @@ public enum BusinessMsEnum {
     PARMETER_EXCEPTION("102", "参数异常！"),
     SERVICE_TIME_OUT("103","调用服务超时！"),
     PARMTER_BIG_EXCEPTION("104","输入的图片数量不能超过50张"),
-    UNEXPECTED_EXCEPTION("500","系统发生异常，请联系管理员");
+    UNEXPECTED_EXCEPTION("500","系统发生异常，请联系管理员"),
+    NOLOGIN_EXCEPTION("501","用户未登录，请联系管理员");
 
     /*
     * 消息码以及消息内容
