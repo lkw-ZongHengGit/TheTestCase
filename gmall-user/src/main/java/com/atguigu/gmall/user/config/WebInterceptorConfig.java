@@ -2,6 +2,7 @@ package com.atguigu.gmall.user.config;
 
 
 import com.atguigu.gmall.user.interceptor.MyInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -12,12 +13,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebInterceptorConfig implements WebMvcConfigurer {
 
+
+
+    //原因: 注册拦截器的时候是new出来的，spring没有管理。所以无法注入对象
+    @Bean
+    public MyInterceptor agentInterceptor(){
+        return  new MyInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
         //拦截所有路径
-        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**")
+        registry.addInterceptor(agentInterceptor()).addPathPatterns("/**")
                 .excludePathPatterns("/**/error")
                 // swagger
+
+                //addPathPatterns("/ksb/**")
+                //.excludePathPatterns("/ksb/auth/**", "/api/common/**", "/error", "/api/*");
                 .excludePathPatterns("/swagger-ui.html")
                 .excludePathPatterns("/v2/**")
                 .excludePathPatterns("**/swagger-resources/**")

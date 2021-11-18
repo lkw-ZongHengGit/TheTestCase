@@ -2,9 +2,14 @@ package com.atguigu.gmall.user.interceptor;
 
 import com.atguigu.gmall.user.eunm.BusinessMsEnum;
 import com.atguigu.gmall.user.exception.BusinessErrorException;
+import com.atguigu.gmall.user.retention.AutoIdempotent;
 import com.atguigu.gmall.user.retention.UnInterception;
+import com.atguigu.gmall.user.service.RedisService;
+import com.atguigu.gmall.user.service.TokenService;
+import com.atguigu.gmall.user.service.impl.TokenServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,13 +24,16 @@ import java.lang.reflect.Method;
 * */
 public class MyInterceptor implements HandlerInterceptor {
 
+    @Autowired
+    TokenServiceImpl tokenService;
+    @Autowired
+    RedisService redisService;
+
     private static final Logger logger = LoggerFactory.getLogger(MyInterceptor.class);
     //执行我们的方法执行
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
       if(handler instanceof HandlerMethod) {
-
-
           HandlerMethod handlerMethod = (HandlerMethod) handler;
           Method method = handlerMethod.getMethod();
           String methodName = method.getName();
@@ -33,13 +41,28 @@ public class MyInterceptor implements HandlerInterceptor {
           //返回true才会继续执行，返回false则取消当前请求
           //判断用户有没有登录,一般登录之后的用户都有一个对应的token
           String token = request.getParameter("token");
-          //判断是否有 自定义注解,如果有,则放行
-          UnInterception annotation = method.getAnnotation(UnInterception.class);
-          if ((token == null || "".equals(token)) && annotation == null) {
-              logger.info("用户未登录,没有权限执行...请登录");
-              //用户未登录,抛出自定义异常
-              throw new BusinessErrorException(BusinessMsEnum.NOLOGIN_EXCEPTION);
+//          判断是否有 自定义注解,如果有,则放行
+//          UnInterception annotation = method.getAnnotation(UnInterception.class);
+//          if ((token == null || "".equals(token)) && annotation == null) {
+//              logger.info("用户未登录,没有权限执行...请登录");
+//              //用户未登录,抛出自定义异常
+//              throw new BusinessErrorException(BusinessMsEnum.NOLOGIN_EXCEPTION);
+//          }
+
+          /*
+          * 上边是springboot笔记里的写法，下面是redis拓展写法
+          * */
+          AutoIdempotent annotation = method.getAnnotation(AutoIdempotent.class);
+
+          if(annotation!=null){
+              try {
+
+                  return tokenService.checkToken(request);
+              }catch (Exception e){
+                  throw new RuntimeException(e.getMessage());
+              }
           }
+
       }
 
         //返回true才会继续执行,false的话 则取消当前请求
