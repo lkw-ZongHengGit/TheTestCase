@@ -1,4 +1,6 @@
 # TheTestCase
 
 
-gmall-user :用户服务,端口8080
+gmall-user :脫脙禄搂路镁脦帽,露脣驴脷8080
+
+鍒嗘敮锛歵est
