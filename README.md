@@ -154,3 +154,18 @@ public class AppRunnerNew {
         }
     }
 }
+
+
+
+65.102:8   openjdk version "1.8.0_272"
+65.103:8   openjdk version "1.8.0_272"
+65.104:4  openjdk version "1.8.0_232"
+65.105:4  openjdk version "1.8.0_232"
+65.106:4  openjdk version "1.8.0_232"
+65.107:4  openjdk version "1.8.0_232"
+65.108:4  openjdk version "1.8.0_131"
+65.114:8  openjdk version "1.8.0_131"
+65.115:8  openjdk version "1.8.0_131"
+65.116:8  openjdk version "1.8.0_131"
+
+
