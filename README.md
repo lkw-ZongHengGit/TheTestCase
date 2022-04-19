@@ -8,43 +8,6 @@ gmall-user :ÓÃ»§·þÎñ,¶Ë¿Ú8080
 测试,增加job1
 
 
-
-7.2 报文定义
-接口请求地址（测试)：
-POST： 
-测试环境：https://192.168.91.19/anta/contract/constructUrl
-生产环境：https://192.168.66.71/anta/contract/constructUrl
-
-
-
-	<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient-cache</artifactId>
-			<version>4.5.3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.metaparadigm</groupId>
-			<artifactId>json-rpc</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.1.41</version>
-		</dependency>
-
-
-
-
-
-
-
-
 <resultMap type="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo" id="TaxPayerPushResult">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="IS_ENABLE" property="isEnable" jdbcType="INTEGER"/>
