@@ -8,85 +8,88 @@ gmall-user :ÓÃ»§·þÎñ,¶Ë¿Ú8080
 测试,增加job1
 
 
-package com.tax.base.httpclient;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+mapper层的方法：
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 
-public class HttpPostSend {
 
-    private CloseableHttpClient httpClient = HttpClients.createDefault();
-    private RequestConfig requestConfig;
+    /**
+     * 批量删除纳税主体关联印花税数目
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteAfilOptionsTaxpayerStampdutyItemByIds(String[] ids);
 
-    Logger logger = LoggerFactory.getLogger(HttpPostSend.class);
 
-    public String sendPost(String url, String postData,String token)
-            throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
+    /**
+     * 新增
+     *
+     * @param entities
+     * @return
+     */
+    int insertBatch(List<StampdutyItemDTO> entities);
+    
+    
+    maper.xml写法：
 
-        String result = null;
-        HttpPost httpPost = new HttpPost(url);
 
-        httpPost.addHeader("Content-Type", "application/json;charset=UTF-8");
-        httpPost.addHeader("Connection", "");
-        httpPost.addHeader("Authorization", token);
+    <delete id="deleteAfilOptionsTaxpayerStampdutyItemByIds" parameterType="String">
+        delete from afil_options_taxpayer_stampduty_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
-        logger.info("POST的数据：{}" , postData);
+    <insert id="insertBatch" parameterType="java.util.List" >
+        insert into afil_options_taxpayer_stampduty_item (id,del_flag,status,create_time,authorized_levy,authorized_ratio,create_xml_quantity,taxpayer_id) VALUES
+        <foreach collection="list" index="index" item="item" separator="," >
+            (#{item.id},#{item.delFlag},#{item.status},now(),#{item.authorizedLevy},#{item.authorizedRatio},#{item.createXmlQuantity},#{item.taxpayerId})
+        </foreach>
+    </insert>
 
-        StringEntity postEntity = new StringEntity(postData, "UTF-8");
-        httpPost.setEntity(postEntity);
-        requestConfig = RequestConfig.custom().setSocketTimeout(180000).setConnectTimeout(10000).build();
-        httpPost.setConfig(requestConfig);
 
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            result = EntityUtils.toString(entity, "UTF-8");
-            logger.info("POST发送的数据:{},POST返回的数据：{}", postData, result);
-        } finally {
-            httpPost.abort();
+
+业务逻辑：注意@Transactional(rollbackFor=Exception.class) 事务的正确做法
+
+taxpayerIds.toArray(new String[]{})   list转array
+
+
+ @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void synTaxSuject(List<AfilOptionsTaxpayerDTO> pushDTO) {
+        if (CollectionUtils.isEmpty(pushDTO)) {
+            return;
         }
-
-        return result;
+       /*
+        代码逻辑：
+       * 1）、遍历税务系统传来的数据，拿到纳税主体id以及印花税id
+       * 2）、根据id删除数据
+       * 3）、再将税务系统传来的数据重新插入
+       * */
+        List<String> itemIdList = new ArrayList<>();
+        List<String> taxpayerIds = new ArrayList<>();
+        List<StampdutyItemDTO> list = new ArrayList<>();
+        List<AfilOptionsTaxpayer> afilOptionsTaxpayerList = pushDTO.stream().map(custDto -> {
+            AfilOptionsTaxpayer afilOptionsTaxpayer = new AfilOptionsTaxpayer();
+            //获取纳税主体关联的印花税
+            List<StampdutyItemDTO> stampdutyItemDTo = custDto.getStampdutyItemDTo();
+            //收集纳税主体id，后边根据id统一删除
+            taxpayerIds.add(custDto.getId());
+            if (!CollectionUtils.isEmpty(stampdutyItemDTo)) {
+                for (StampdutyItemDTO stampdutyItemDTO : stampdutyItemDTo) {
+                    //收集印花税id以及印花税实体类，方便后边删除以及插入
+                    list.add(stampdutyItemDTO);
+                    itemIdList.add(stampdutyItemDTO.getId());
+                }
+            }
+            BeanUtils.copyProperties(custDto, afilOptionsTaxpayer);
+            return afilOptionsTaxpayer;
+        }).collect(Collectors.toList());
+        //删除纳税主体、印花税
+        afilOptionsTaxpayerMapper.deleteAfilOptionsTaxpayerByIds(taxpayerIds.toArray(new String[]{}));
+        iAfilOptionsTaxpayerStampdutyItemService.deleteAfilOptionsTaxpayerStampdutyItemByIds(itemIdList.toArray(new String[]{}));
+        //新增纳税主体、印花税
+        iAfilOptionsTaxpayerStampdutyItemService.insertBatch(list);
+        afilOptionsTaxpayerMapper.insertBatch(afilOptionsTaxpayerList);
     }
-
-    public String sendPostNoToken(String url, String postData)
-            throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
-
-        String result = null;
-        HttpPost httpPost = new HttpPost(url);
-
-        httpPost.addHeader("Content-Type", "application/json;charset=UTF-8");
-        httpPost.addHeader("Connection", "");
-        logger.info("POST的数据：{}" , postData);
-
-        StringEntity postEntity = new StringEntity(postData, "UTF-8");
-        httpPost.setEntity(postEntity);
-        requestConfig = RequestConfig.custom().setSocketTimeout(180000).setConnectTimeout(10000).build();
-        httpPost.setConfig(requestConfig);
-
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-            HttpEntity entity = response.getEntity();
-            result = EntityUtils.toString(entity, "UTF-8");
-            logger.info("POST发送的数据:{},POST返回的数据：{}", postData, result);
-        } finally {
-            httpPost.abort();
-        }
-
-        return result;
-    }
-}
