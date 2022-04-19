@@ -44,57 +44,6 @@ POST：
 
 
 
-    <select id="queryTaxpayerPushAllList" parameterType="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo"
-            resultMap="TaxPayerPushResult">
-        select
-        tp.ID,tp.TAXPAYER_NO,tp.TAXPAYER_NAME,tp.CORPORATE_HIERARCHY,tp.REGISTER_PROVINCE,tp.REGISTER_CITY,tp.REGISTER_DISTRICT,tp.ACCOUNTING_TYPE,tp.REGISTER_POSTAL_CODE,
-        tp.VAT_TAXPAYER_IDENTITY,tp.IS_DELETE,tp.IS_ENABLE,ts.AUTHORIZED_LEVY,ts.ID as ITEM_ID,ts.AUTHORIZED_RATIO,ts.CREATE_XML_QUANTITY,ts.TAXPAYER_ID,ts.IS_DELETE as ITEM_IS_DELETE,ts.IS_ENABLE AS ITEM_IS_ENABLE
-        from TAX_OPTIONS_TAXPAYER tp
-        left join tax_options_taxpayer_stampduty_item ts on tp.ID = ts.TAXPAYER_ID
-        where 1 =1
-        <if test="systemPoint != null" >
-            AND (tp.CREATE_TIME > #{systemPoint,jdbcType=TIMESTAMP} or tp.UPDATE_TIME > #{systemPoint,jdbcType=TIMESTAMP})
-        </if>
-    </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <resultMap type="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo" id="TaxPayerPushResult">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
