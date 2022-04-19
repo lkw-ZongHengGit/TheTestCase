@@ -13,6 +13,46 @@ mapper层的方法：
 
 
 
+ @Override
+    @Transactional(rollbackFor=Exception.class)
+    public void synTaxSuject(List<AfilOptionsTaxpayerDTO> pushDTO) {
+        if (CollectionUtils.isEmpty(pushDTO)) {
+            return;
+        }
+       /*
+        代码逻辑：
+       * 1）、遍历税务系统传来的数据，拿到纳税主体id以及印花税id
+       * 2）、根据id删除数据
+       * 3）、再将税务系统传来的数据重新插入
+       * */
+        List<String> itemIdList = new ArrayList<>();
+        List<String> taxpayerIds = new ArrayList<>();
+        List<StampdutyItemDTO> list = new ArrayList<>();
+        List<AfilOptionsTaxpayer> afilOptionsTaxpayerList = pushDTO.stream().map(custDto -> {
+            AfilOptionsTaxpayer afilOptionsTaxpayer = new AfilOptionsTaxpayer();
+            //获取纳税主体关联的印花税
+            List<StampdutyItemDTO> stampdutyItemDTo = custDto.getStampdutyItemDTo();
+            //收集纳税主体id，后边根据id统一删除
+            taxpayerIds.add(custDto.getId());
+            if (!CollectionUtils.isEmpty(stampdutyItemDTo)) {
+                for (StampdutyItemDTO stampdutyItemDTO : stampdutyItemDTo) {
+                    //收集印花税id以及印花税实体类，方便后边删除以及插入
+                    list.add(stampdutyItemDTO);
+                    itemIdList.add(stampdutyItemDTO.getId());
+                }
+            }
+            BeanUtils.copyProperties(custDto, afilOptionsTaxpayer);
+            return afilOptionsTaxpayer;
+        }).collect(Collectors.toList());
+        //删除纳税主体、印花税
+        afilOptionsTaxpayerMapper.deleteAfilOptionsTaxpayerByIds(taxpayerIds.toArray(new String[]{}));
+        iAfilOptionsTaxpayerStampdutyItemService.deleteAfilOptionsTaxpayerStampdutyItemByIds(itemIdList.toArray(new String[]{}));
+        //新增纳税主体、印花税
+        iAfilOptionsTaxpayerStampdutyItemService.insertBatch(list);
+        afilOptionsTaxpayerMapper.insertBatch(afilOptionsTaxpayerList);
+    }
+
+
     /**
      * 批量删除纳税主体关联印花税数目
      *
@@ -55,41 +95,3 @@ mapper层的方法：
 taxpayerIds.toArray(new String[]{})   list转array
 
 
- @Override
-    @Transactional(rollbackFor=Exception.class)
-    public void synTaxSuject(List<AfilOptionsTaxpayerDTO> pushDTO) {
-        if (CollectionUtils.isEmpty(pushDTO)) {
-            return;
-        }
-       /*
-        代码逻辑：
-       * 1）、遍历税务系统传来的数据，拿到纳税主体id以及印花税id
-       * 2）、根据id删除数据
-       * 3）、再将税务系统传来的数据重新插入
-       * */
-        List<String> itemIdList = new ArrayList<>();
-        List<String> taxpayerIds = new ArrayList<>();
-        List<StampdutyItemDTO> list = new ArrayList<>();
-        List<AfilOptionsTaxpayer> afilOptionsTaxpayerList = pushDTO.stream().map(custDto -> {
-            AfilOptionsTaxpayer afilOptionsTaxpayer = new AfilOptionsTaxpayer();
-            //获取纳税主体关联的印花税
-            List<StampdutyItemDTO> stampdutyItemDTo = custDto.getStampdutyItemDTo();
-            //收集纳税主体id，后边根据id统一删除
-            taxpayerIds.add(custDto.getId());
-            if (!CollectionUtils.isEmpty(stampdutyItemDTo)) {
-                for (StampdutyItemDTO stampdutyItemDTO : stampdutyItemDTo) {
-                    //收集印花税id以及印花税实体类，方便后边删除以及插入
-                    list.add(stampdutyItemDTO);
-                    itemIdList.add(stampdutyItemDTO.getId());
-                }
-            }
-            BeanUtils.copyProperties(custDto, afilOptionsTaxpayer);
-            return afilOptionsTaxpayer;
-        }).collect(Collectors.toList());
-        //删除纳税主体、印花税
-        afilOptionsTaxpayerMapper.deleteAfilOptionsTaxpayerByIds(taxpayerIds.toArray(new String[]{}));
-        iAfilOptionsTaxpayerStampdutyItemService.deleteAfilOptionsTaxpayerStampdutyItemByIds(itemIdList.toArray(new String[]{}));
-        //新增纳税主体、印花税
-        iAfilOptionsTaxpayerStampdutyItemService.insertBatch(list);
-        afilOptionsTaxpayerMapper.insertBatch(afilOptionsTaxpayerList);
-    }
