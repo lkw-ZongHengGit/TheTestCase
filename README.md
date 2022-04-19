@@ -61,6 +61,41 @@ POST：
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <resultMap type="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo" id="TaxPayerPushResult">
         <id column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="IS_ENABLE" property="isEnable" jdbcType="INTEGER"/>
