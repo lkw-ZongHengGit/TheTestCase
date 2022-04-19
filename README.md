@@ -17,176 +17,81 @@ POST：
 
 
 
-
-package com.example.cn.demo.test;
-
-import com.example.cn.demo.dao.UpMapper;
-import com.example.cn.demo.entity.FileContent;
-import com.example.cn.demo.upload.FastDFSService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-@Service
-public class AppRunnerNew {
-
-    @Autowired
-    private UpMapper upMapper;
-    @Autowired
-    FastDFSService fastDFSService;
-
-
-    private Queue<FileContent> queue = new ConcurrentLinkedQueue();
-    private Queue<String> insertQueue = new ConcurrentLinkedQueue();
-    private Queue<FileContent> lastQueue = new ConcurrentLinkedQueue();
-    private Integer in = 0;
-
-
-    public void startRun() {
-        // 查询数据 + 添加至队列
-        queryData();
-        // 初始化线程 + 处理数据
-        initThread(10);
-    }
-
-    public void initThread(int num) {
-        for (int i = 1; i <= num; i++) {
-            int finalI = i;
-            Thread thread = null;
-            try {
-                thread = new Thread(() -> {
-                    int k = 0;
-                    System.out.println("线程[" + finalI + "]启动");
-                    while (!queue.isEmpty()) {
-                        k++;
-                        startGame();
-                    }
-                });
-                thread.start();
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
-            } finally {
-                thread.interrupt();
-            }
-        }
-    }
-
-    public void queryData() {
-        List<FileContent> fileContents = upMapper.selectFiles();
-        if(!CollectionUtils.isEmpty(fileContents)&&fileContents.size()>1000){
-            queue.addAll(fileContents);
-        }else if(!CollectionUtils.isEmpty(fileContents)&&fileContents.size()<=1000&&in<=1){
-            //查询数据小于1000，最后抽出一条线程将他们统一处理
-            lastQueue.addAll(fileContents);
-            Thread thread = null;
-            try {
-                thread = new Thread(() -> {
-                    while (!lastQueue.isEmpty()) {
-                        lastGame();
-                    }
-                });
-                thread.start();
-                in++;
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-    }
-
-    public void startGame() {
-        FileContent fileContent = queue.poll();
-        try {
-            if (fileContent != null) {
-                fastDFSService.downloadFile(fileContent.getFileGroup(),fileContent.getFilePath());
-                insertQueue.add(fileContent.getId());
-            }
-            if(insertQueue.size()>=500){
-                updateFileSize();
-            }
-        } catch (Exception e) {
-         //   queue.add(fileContent);
-            fileContent.setExtStringFive(e.getMessage());
-            upMapper.updateByFile(fileContent);
-        }finally {
-            //上锁的方法
-          if(queue.size() < 1000){
-              addFileSize();
-          }
-        }
-    }
+	<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.metaparadigm</groupId>
+			<artifactId>json-rpc</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.1.41</version>
+		</dependency>
 
 
 
-    public void lastGame() {
-        FileContent fileContent = lastQueue.poll();
-        try {
-            if (fileContent != null) {
-                fastDFSService.downloadFile(fileContent.getFileGroup(),fileContent.getFilePath());
-                upMapper.updateBatchByOneId(fileContent.getId());
-            }
-        } catch (Exception e) {
-            fileContent.setExtStringFive(e.getMessage());
-            upMapper.updateByFile(fileContent);
-        }finally {
-            if(lastQueue.size()==1){
-                queryData();
-            }
-        }
-    }
 
-    public synchronized void addFileSize() {
-        if (queue.size() < 1000&&in==0) {
-            queryData();
-        }
-    }
 
-    public synchronized void updateFileSize() {
-        if(insertQueue.size()>=500){
-            List<String> entity = new ArrayList(insertQueue);
-            upMapper.updateBatchById(entity);
-            insertQueue.clear();
-        }
-    }
-}
 
-91.199:4   openjdk version "1.8.0_131"
 
-91.200:4   openjdk version "1.8.0_131"
+    <select id="queryTaxpayerPushAllList" parameterType="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo"
+            resultMap="TaxPayerPushResult">
+        select
+        tp.ID,tp.TAXPAYER_NO,tp.TAXPAYER_NAME,tp.CORPORATE_HIERARCHY,tp.REGISTER_PROVINCE,tp.REGISTER_CITY,tp.REGISTER_DISTRICT,tp.ACCOUNTING_TYPE,tp.REGISTER_POSTAL_CODE,
+        tp.VAT_TAXPAYER_IDENTITY,tp.IS_DELETE,tp.IS_ENABLE,ts.AUTHORIZED_LEVY,ts.ID as ITEM_ID,ts.AUTHORIZED_RATIO,ts.CREATE_XML_QUANTITY,ts.TAXPAYER_ID,ts.IS_DELETE as ITEM_IS_DELETE,ts.IS_ENABLE AS ITEM_IS_ENABLE
+        from TAX_OPTIONS_TAXPAYER tp
+        left join tax_options_taxpayer_stampduty_item ts on tp.ID = ts.TAXPAYER_ID
+        where 1 =1
+        <if test="systemPoint != null" >
+            AND (tp.CREATE_TIME > #{systemPoint,jdbcType=TIMESTAMP} or tp.UPDATE_TIME > #{systemPoint,jdbcType=TIMESTAMP})
+        </if>
+    </select>
 
-91.202:4   openjdk version "1.8.0_131"
 
-91.203:4   openjdk version "1.8.0_131"
 
-91.204:4   openjdk version "1.8.0_131"
 
-66.71:4   openjdk version "1.8.0_131"
 
-66.72:4   openjdk version "1.8.0_131"
+<resultMap type="com.tax.option.dto.taxpayer.TaxpayerPushCustDTo" id="TaxPayerPushResult">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="IS_ENABLE" property="isEnable" jdbcType="INTEGER"/>
+        <result column="IS_DELETE" property="isDelete" jdbcType="INTEGER"/>
+        <result column="TAXPAYER_NO" property="taxpayerNo" jdbcType="VARCHAR"/>
+        <result column="TAXPAYER_NAME" property="taxpayerName" jdbcType="VARCHAR"/>
+        <result column="CORPORATE_HIERARCHY" property="corporateHierarchy" jdbcType="INTEGER"/>
+        <result column="REGISTER_PROVINCE" property="registerProvince" jdbcType="VARCHAR"/>
+        <result column="REGISTER_CITY" property="registerCity" jdbcType="VARCHAR"/>
+        <result column="REGISTER_DISTRICT" property="registerDistrict" jdbcType="VARCHAR"/>
+        <result column="ACCOUNTING_TYPE" property="accountingType" jdbcType="INTEGER"/>
+        <result column="REGISTER_POSTAL_CODE" property="registerPostalCode" jdbcType="VARCHAR"/>
+        <result column="VAT_TAXPAYER_IDENTITY" property="vatTaxpayerIdentity" jdbcType="INTEGER"/>
+        <collection  property="stampdutyItemDTo"   javaType="java.util.List"   resultMap="TaxPayerPushChildrenResult" />
+    </resultMap>
 
-66.73:4   openjdk version "1.8.0_131"
-
-66.74:4   openjdk version "1.8.0_131"
-
-66.75:4   openjdk version "1.8.0_131"
-
-66.76:4   openjdk version "1.8.0_131"
-
-66.77:4   openjdk version "1.8.0_131"
-
-66.78:4   openjdk version "1.8.0_131"
-
-66.79:4   openjdk version "1.8.0_131"
-
-66.80:4   openjdk version "1.8.0_131"
-
-66.81:8   openjdk version "1.8.0_131"
-
-66.82:4   openjdk version "1.8.0_131"
-
-66.83:4   openjdk version "1.8.0_131"
+    <resultMap type="com.tax.option.dto.taxpayer.StampdutyItemDTo" id="TaxPayerPushChildrenResult">
+        <id column="ITEM_ID" property="id" jdbcType="VARCHAR"/>
+        <result column="AUTHORIZED_LEVY" property="authorizedLevy" jdbcType="VARCHAR" />
+        <result column="AUTHORIZED_RATIO" property="authorizedRatio" jdbcType="DECIMAL" />
+        <result column="CREATE_XML_QUANTITY" property="createXmlQuantity" jdbcType="INTEGER"/>
+        <result column="TAXPAYER_ID" property="taxpayerId" jdbcType="VARCHAR" />
+        <result column="ITEM_IS_ENABLE" property="isEnable" jdbcType="INTEGER"/>
+        <result column="ITEM_IS_DELETE" property="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    response拿回到的数据怎么进行转换成String；
+           HttpEntity entity = response.getEntity();
+            result = EntityUtils.toString(entity, "UTF-8");
+    
+    将String类型大json字符串转map的工具类：
+    
+      Map result = JSONObject.parseObject(body, Map.class);
+    
