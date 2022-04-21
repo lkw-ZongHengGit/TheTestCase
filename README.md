@@ -12,55 +12,31 @@ gmall-user :ÓÃ»§·þÎñ,¶Ë¿Ú8080
 mapper层的方法：
 
 
-
- @Override
-    @Transactional(rollbackFor=Exception.class)
-    public void synTaxSuject(List<AfilOptionsTaxpayerDTO> pushDTO) {
-        if (CollectionUtils.isEmpty(pushDTO)) {
-            return;
+自己写过的算法：
+ private Boolean checkRedInvoiceInfo(String redinvoiceInfoTable) {
+        int sumNum = 0, result = 0;
+        if (!redinvoiceInfoTable.matches("^[0-9]*$")) {
+            return true;
         }
-       /*
-        代码逻辑：
-       * 1）、遍历税务系统传来的数据，拿到纳税主体id以及印花税id
-       * 2）、根据id删除数据
-       * 3）、再将税务系统传来的数据重新插入
-       * */
-        List<String> itemIdList = new ArrayList<>();
-        List<String> taxpayerIds = new ArrayList<>();
-        List<StampdutyItemDTO> list = new ArrayList<>();
-        List<AfilOptionsTaxpayer> afilOptionsTaxpayerList = pushDTO.stream().map(custDto -> {
-            AfilOptionsTaxpayer afilOptionsTaxpayer = new AfilOptionsTaxpayer();
-            //获取纳税主体关联的印花税
-            List<StampdutyItemDTO> stampdutyItemDTo = custDto.getStampdutyItemDTo();
-            //收集纳税主体id，后边根据id统一删除
-            taxpayerIds.add(custDto.getId());
-            if (!CollectionUtils.isEmpty(stampdutyItemDTo)) {
-                for (StampdutyItemDTO stampdutyItemDTO : stampdutyItemDTo) {
-                    //收集印花税id以及印花税实体类，方便后边删除以及插入
-                    list.add(stampdutyItemDTO);
-                    itemIdList.add(stampdutyItemDTO.getId());
-                }
+        // 新建一个数组用来保存每一位的数字
+        int[] intArray = new int[redinvoiceInfoTable.length()];
+        for (int i = 0; i < redinvoiceInfoTable.length(); i++) {
+            // 遍历,将每一位数字添加如intArray
+            Character ch = redinvoiceInfoTable.charAt(i);
+            intArray[i] = Integer.parseInt(ch.toString());
+            //获取到的每一位数字相加
+            result = intArray[i] + result;
+            //只取前十五位的结果,并取个位数
+            if (i == intArray.length - 2) {
+                sumNum = result % 10;
             }
-            BeanUtils.copyProperties(custDto, afilOptionsTaxpayer);
-            return afilOptionsTaxpayer;
-        }).collect(Collectors.toList());
-        //删除纳税主体、印花税
-        afilOptionsTaxpayerMapper.deleteAfilOptionsTaxpayerByIds(taxpayerIds.toArray(new String[]{}));
-        iAfilOptionsTaxpayerStampdutyItemService.deleteAfilOptionsTaxpayerStampdutyItemByIds(itemIdList.toArray(new String[]{}));
-        //新增纳税主体、印花税
-        iAfilOptionsTaxpayerStampdutyItemService.insertBatch(list);
-        afilOptionsTaxpayerMapper.insertBatch(afilOptionsTaxpayerList);
+        }
+        if (sumNum != intArray[intArray.length - 1]) {
+            return true;
+        }
+        return false;
     }
-
-
-    /**
-     * 批量删除纳税主体关联印花税数目
-     *
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    public int deleteAfilOptionsTaxpayerStampdutyItemByIds(String[] ids);
-
+------
 
     /**
      * 新增
