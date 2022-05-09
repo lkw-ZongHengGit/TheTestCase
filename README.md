@@ -66,8 +66,19 @@ mapper层的方法：
 
 
 
-业务逻辑：注意@Transactional(rollbackFor=Exception.class) 事务的正确做法
+    String filePath = "tax/2022/05/07/AT销项发票汇总底稿.xlsx";
+        //查看下标最后一次 / 出现的下标  ：  14
+        int i = filePath.lastIndexOf("/");
+        System.out.println(i);
+        // 从最后一个“/”出现的下标+1开始截取，得到：AT销项发票汇总底稿.xlsx
+        String substring = filePath.substring(filePath.lastIndexOf("/") + 1);
+        System.out.println(substring);
+        //从第一个下标截取，一直到“/”出现的下标+1，得到：   tax/2022/05/07/
+        String substring1 = filePath.substring(0, filePath.lastIndexOf("/")+1);
+        System.out.println(substring1);
+        // 匹配字符串以某个英文字母开头
+        boolean tax = filePath.startsWith("tax");
+        System.out.println(tax);
 
-taxpayerIds.toArray(new String[]{})   list转array
 
 
