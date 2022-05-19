@@ -83,4 +83,6 @@ mapper层的方法：
 
 
 
+
+curl --location --request GET 'localhost:10010/dfsDownload.do' 
 							   
