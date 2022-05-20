@@ -84,7 +84,10 @@ mapper层的方法：
     <delete id="cleanTaxReportInstanceByDate" parameterType="java.util.Date">
         delete from afil_tax_return_task where create_time &lt;= #{creatTime,jdbcType=TIMESTAMP}
     </delete>
-    
-    
+
+Maper写法：
+     int cleanTaxReportInstanceByDate(@Param("creatTime")Date creatTime);
+     
+     
 curl --location --request GET 'localhost:10010/dfsDownload.do' 
 							   
