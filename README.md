@@ -81,16 +81,10 @@ mapper层的方法：
         System.out.println(tax);
 
 
-
-        //计算日期相差天数的具体时间：date代表当前时间，day代表相隔天数，当前时间-相隔天数=具体那天的日期
-        Date time = new Date();
-        int day = 92;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(time);
-        cal.add(Calendar.DATE, -day);
-        String newTime = sdf.format(cal.getTime());
-        System.out.println(newTime);
-
+    <delete id="cleanTaxReportInstanceByDate" parameterType="java.util.Date">
+        delete from afil_tax_return_task where create_time &lt;= #{creatTime,jdbcType=TIMESTAMP}
+    </delete>
+    
+    
 curl --location --request GET 'localhost:10010/dfsDownload.do' 
 							   
