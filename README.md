@@ -91,3 +91,38 @@ Maper写法：
      
 curl --location --request GET 'localhost:10010/dfsDownload.do' 
 							   
+
+
+
+
+
+  public static void main(String[] args) {
+        String  问题 = "=====>>>  请将你的问题写在这:(道过谦了，但效果微乎其微。。)";
+
+
+        // 请将问题输入一下输入框
+        Gom(问题);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    private static void Gom(String s) {
+        String i = s.substring(s.lastIndexOf(":")+1);
+        if(i.equals("(智者我惹我心爱的人不高兴了。。)")) {
+            System.out.println("==>>  你：智者我惹我心爱的人不高兴了。。");
+            System.out.println("==>>  智者：小子是你的问题，你跟你学姐道过谦了吗？");
+        }else if(i.equals("(道过谦了，但效果微乎其微。。)")){
+            System.out.println("==>>  你：智者我惹我心爱的人不高兴了。。");
+            System.out.println("==>>  智者：小子是你的问题，你跟你学姐道过谦了吗？");
+            System.out.println("==>>  你：道过谦了，但效果微乎其微。。");
+            System.out.println("==>>  智者：本来无一物，何处惹尘埃。");
+        }
+    }
