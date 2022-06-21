@@ -46,40 +46,6 @@ mapper层的方法：
      */
     int insertBatch(List<StampdutyItemDTO> entities);
     
-    
-    maper.xml写法：
-
-
-    <delete id="deleteAfilOptionsTaxpayerStampdutyItemByIds" parameterType="String">
-        delete from afil_options_taxpayer_stampduty_item where id in 
-        <foreach item="id" collection="array" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </delete>
-
-    <insert id="insertBatch" parameterType="java.util.List" >
-        insert into afil_options_taxpayer_stampduty_item (id,del_flag,status,create_time,authorized_levy,authorized_ratio,create_xml_quantity,taxpayer_id) VALUES
-        <foreach collection="list" index="index" item="item" separator="," >
-            (#{item.id},#{item.delFlag},#{item.status},now(),#{item.authorizedLevy},#{item.authorizedRatio},#{item.createXmlQuantity},#{item.taxpayerId})
-        </foreach>
-    </insert>
-
-
-
-    String filePath = "tax/2022/05/07/AT销项发票汇总底稿.xlsx";
-        //查看下标最后一次 / 出现的下标  ：  14
-        int i = filePath.lastIndexOf("/");
-        System.out.println(i);
-        // 从最后一个“/”出现的下标+1开始截取，得到：AT销项发票汇总底稿.xlsx
-        String substring = filePath.substring(filePath.lastIndexOf("/") + 1);
-        System.out.println(substring);
-        //从第一个下标截取，一直到“/”出现的下标+1，得到：   tax/2022/05/07/
-        String substring1 = filePath.substring(0, filePath.lastIndexOf("/")+1);
-        System.out.println(substring1);
-        // 匹配字符串以某个英文字母开头
-        boolean tax = filePath.startsWith("tax");
-        System.out.println(tax);
-
 
     <delete id="cleanTaxReportInstanceByDate" parameterType="java.util.Date">
         delete from afil_tax_return_task where create_time &lt;= #{creatTime,jdbcType=TIMESTAMP}
