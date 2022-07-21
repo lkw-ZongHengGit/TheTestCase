@@ -109,3 +109,6 @@ http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=0d6162347c50eb99
             where sys_contract_id = #{item.sys_contract_id,jdbcType=VARCHAR}
         </foreach>
     </update>)
+    
+    
+http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=236431305005be9d41e57b1c413300534d05080457010f045449090954521a550056521d070706044f50030402560e560700555102333c61030a45514e021e4f1505433058&code=bd10f37a&fid=72/a94128e6-892a-4b2c-a41e-424de97eddad
