@@ -136,5 +136,837 @@ http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=0e3335663246ea9a
 
 
 
+package com.epoch.workflow.util;
 
-http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=083863382901bac529f57e161e39040b195c5b590d0b040d061505595a5c1e0d57005a155b080a5a1b085b5d0a0d0b0d030c565e0e393b3957561759174e524b3606&code=68c89939&fid=72/d8a42740-face-4a89-b19c-08e3484545f7&fid=72/d8a42740-face-4a89-b19c-08e3484545f7
+import com.epoch.workflow.vo.TaskForcedEndVo;
+
+import java.util.List;
+
+public class OrderAutomaticExecutionMailUtil {
+    /**
+     * 生成自动结束单据邮件主题
+     * @return
+     */
+    public static String generateOrderAutomaticSubject() {
+        return  "月结工单已自动审批通过（重要）";
+    }
+
+    /**
+     * 生成结束单据预提醒邮件主题
+     * @return
+     */
+    public static String BeforehandSendMailSubject() {
+        return  "请及时审批月结待办工单（重要）";
+    }
+
+
+    /**
+     * 生成报销费用欠票提醒邮件内容
+     * @return
+     */
+    public static String generateOrderAutomaticContent(TaskForcedEndVo taskForcedEnd) {
+        // 单据信息行
+        StringBuilder lineContentBuilder = new StringBuilder();
+        lineContentBuilder.append(generateBookLineContent(taskForcedEnd));
+
+
+        // 邮件内容
+        return "<html xmlns:v=\"urn:schemas-microsoft-com:vml\"\n" +
+                "xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n" +
+                "xmlns:w=\"urn:schemas-microsoft-com:office:word\"\n" +
+                "xmlns:x=\"urn:schemas-microsoft-com:office:excel\"\n" +
+                "xmlns:m=\"http://schemas.microsoft.com/office/2004/12/omml\"\n" +
+                "xmlns=\"http://www.w3.org/TR/REC-html40\">\n" +
+                "\n" +
+                "<head>\n" +
+                "<meta http-equiv=Content-Type content=\"text/html; charset=unicode\">\n" +
+                "<meta name=ProgId content=Word.Document>\n" +
+                "<meta name=Generator content=\"Microsoft Word 15\">\n" +
+                "<meta name=Originator content=\"Microsoft Word 15\">\n" +
+                "<style>\n" +
+                "<!--\n" +
+                " /* Font Definitions */\n" +
+                " @font-face\n" +
+                "\t{font-family:宋体;\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-alt:SimSun;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:3 680460288 22 0 262145 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"Cambria Math\";\n" +
+                "\tpanose-1:2 4 5 3 5 4 6 3 2 4;\n" +
+                "\tmso-font-charset:1;\n" +
+                "\tmso-generic-font-family:roman;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:0 0 0 0 0 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:等线;\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-alt:DengXian;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-1610612033 953122042 22 0 262159 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:微软雅黑;\n" +
+                "\tpanose-1:2 11 5 3 2 2 4 2 2 4;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:swiss;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-2147483001 718224464 22 0 262175 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@等线\";\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-1610612033 953122042 22 0 262159 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@宋体\";\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:3 680460288 22 0 262145 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@微软雅黑\";\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:swiss;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-2147483001 718224464 22 0 262175 0;}\n" +
+                " /* Style Definitions */\n" +
+                " p.MsoNormal, li.MsoNormal, div.MsoNormal\n" +
+                "\t{mso-style-unhide:no;\n" +
+                "\tmso-style-qformat:yes;\n" +
+                "\tmso-style-parent:\"\";\n" +
+                "\tmargin:0cm;\n" +
+                "\tmargin-bottom:.0001pt;\n" +
+                "\ttext-align:justify;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:10.5pt;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-bidi-font-family:宋体;}\n" +
+                "a:link, span.MsoHyperlink\n" +
+                "\t{mso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tcolor:#0563C1;\n" +
+                "\ttext-decoration:underline;\n" +
+                "\ttext-underline:single;}\n" +
+                "a:visited, span.MsoHyperlinkFollowed\n" +
+                "\t{mso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tcolor:#954F72;\n" +
+                "\ttext-decoration:underline;\n" +
+                "\ttext-underline:single;}\n" +
+                "p.msonormal0, li.msonormal0, div.msonormal0\n" +
+                "\t{mso-style-name:msonormal;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tmso-margin-top-alt:auto;\n" +
+                "\tmargin-right:0cm;\n" +
+                "\tmso-margin-bottom-alt:auto;\n" +
+                "\tmargin-left:0cm;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:12.0pt;\n" +
+                "\tfont-family:宋体;\n" +
+                "\tmso-bidi-font-family:宋体;}\n" +
+                "span.EmailStyle18\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle19\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle20\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle21\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle22\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle23\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle24\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle25\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle26\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                ".MsoChpDefault\n" +
+                "\t{mso-style-type:export-only;\n" +
+                "\tmso-default-props:yes;\n" +
+                "\tfont-size:10.0pt;\n" +
+                "\tmso-ansi-font-size:10.0pt;\n" +
+                "\tmso-bidi-font-size:10.0pt;\n" +
+                "\tmso-ascii-font-family:\"Times New Roman\";\n" +
+                "\tmso-fareast-font-family:\"Times New Roman\";\n" +
+                "\tmso-hansi-font-family:\"Times New Roman\";\n" +
+                "\tmso-font-kerning:0pt;}\n" +
+                "@page WordSection1\n" +
+                "\t{size:612.0pt 792.0pt;\n" +
+                "\tmargin:72.0pt 90.0pt 72.0pt 90.0pt;\n" +
+                "\tmso-header-margin:36.0pt;\n" +
+                "\tmso-footer-margin:36.0pt;\n" +
+                "\tmso-paper-source:0;}\n" +
+                "div.WordSection1\n" +
+                "\t{page:WordSection1;}\n" +
+                "-->\n" +
+                "</style>\n" +
+                "<!--[if gte mso 10]>\n" +
+                "<style>\n" +
+                " /* Style Definitions */\n" +
+                " table.MsoNormalTable\n" +
+                "\t{mso-style-name:普通表格;\n" +
+                "\tmso-tstyle-rowband-size:0;\n" +
+                "\tmso-tstyle-colband-size:0;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tmso-style-parent:\"\";\n" +
+                "\tmso-padding-alt:0cm 5.4pt 0cm 5.4pt;\n" +
+                "\tmso-para-margin:0cm;\n" +
+                "\tmso-para-margin-bottom:.0001pt;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:10.0pt;\n" +
+                "\tfont-family:\"Times New Roman\",serif;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><xml>\n" +
+                " <o:shapedefaults v:ext=\"edit\" spidmax=\"1026\"/>\n" +
+                "</xml><![endif]--><!--[if gte mso 9]><xml>\n" +
+                " <o:shapelayout v:ext=\"edit\">\n" +
+                "  <o:idmap v:ext=\"edit\" data=\"1\"/>\n" +
+                " </o:shapelayout></xml><![endif]-->\n" +
+                "</head>\n" +
+                "\n" +
+                "<body lang=ZH-CN link=\"#0563C1\" vlink=\"#954F72\" style='tab-interval:21.0pt;\n" +
+                "text-justify-trim:punctuation'>\n" +
+                "\n" +
+                "<div class=WordSection1>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>尊敬的用户您好，<span\n" +
+                "lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>您在财务共享系统中如下月结工单已超<span\n" +
+                "lang=EN-US>4</span>小时未审批，为避免影响月结进度，<b><span style='color:red'>系统已自动审批通过</span></b>，请及时登录系统（<span\n" +
+                "lang=EN-US><a href=\"https://fssc.anta.com/\">https://fssc.anta.com/</a></span>）进行审核，如需调整审核结果，请及时联系提单人或本单业财审核人员沟通，\n" +
+                "如未反馈，视同已审批确认，谢谢！<span lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1299\n" +
+                " style='width:974.0pt;margin-left:-.15pt;border-collapse:collapse;mso-yfti-tbllook:\n" +
+                " 1184;mso-padding-alt:0cm 0cm 0cm 0cm'>\n" +
+                " <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:15.0pt'>\n" +
+                "  <td width=141 nowrap style='width:106.1pt;border:solid windowtext 1.0pt;\n" +
+                "  background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>单据名称<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=147 nowrap style='width:109.9pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>单据编号<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>提单人<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>到达待办时间<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=112 style='width:84.0pt;border:solid windowtext 1.0pt;border-left:\n" +
+                "  none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>金额合计<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=187 nowrap style='width:140.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>业务类型<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=389 nowrap style='width:292.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>标题<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                " </tr>" +
+                // 单据信息
+                lineContentBuilder +
+                " </table>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US style='font-family:\"微软雅黑\",sans-serif'><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>本邮件属系统邮件，请勿回复，有任何问题请联系\n" +
+                "<span lang=EN-US><a href=\"mailto:fssc@anta.com\">fssc@anta.com</a></span>，感谢您的合作！<span\n" +
+                "lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "</div>\n" +
+                "\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>\n";
+    }
+
+
+    /**
+     * 生成报销费用欠票提醒邮件内容
+     * @return
+     */
+    public static String generateBeforehandSendMailContent(List<TaskForcedEndVo> taskForcedEndList) {
+        // 单据信息行
+        StringBuilder lineContentBuilder = new StringBuilder();
+            for (TaskForcedEndVo taskForcedEndVo  : taskForcedEndList) {
+            lineContentBuilder.append(generateBookLineContent(taskForcedEndVo));
+        }
+
+        // 邮件内容
+        return "<html xmlns:v=\"urn:schemas-microsoft-com:vml\"\n" +
+                "xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n" +
+                "xmlns:w=\"urn:schemas-microsoft-com:office:word\"\n" +
+                "xmlns:x=\"urn:schemas-microsoft-com:office:excel\"\n" +
+                "xmlns:m=\"http://schemas.microsoft.com/office/2004/12/omml\"\n" +
+                "xmlns=\"http://www.w3.org/TR/REC-html40\">\n" +
+                "\n" +
+                "<head>\n" +
+                "<meta http-equiv=Content-Type content=\"text/html; charset=unicode\">\n" +
+                "<meta name=ProgId content=Word.Document>\n" +
+                "<meta name=Generator content=\"Microsoft Word 15\">\n" +
+                "<meta name=Originator content=\"Microsoft Word 15\">\n" +
+                "<style>\n" +
+                "<!--\n" +
+                " /* Font Definitions */\n" +
+                " @font-face\n" +
+                "\t{font-family:宋体;\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-alt:SimSun;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:3 680460288 22 0 262145 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"Cambria Math\";\n" +
+                "\tpanose-1:2 4 5 3 5 4 6 3 2 4;\n" +
+                "\tmso-font-charset:1;\n" +
+                "\tmso-generic-font-family:roman;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:0 0 0 0 0 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:等线;\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-alt:DengXian;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-1610612033 953122042 22 0 262159 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:微软雅黑;\n" +
+                "\tpanose-1:2 11 5 3 2 2 4 2 2 4;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:swiss;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-2147483001 718224464 22 0 262175 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@等线\";\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-1610612033 953122042 22 0 262159 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@宋体\";\n" +
+                "\tpanose-1:2 1 6 0 3 1 1 1 1 1;\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:auto;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:3 680460288 22 0 262145 0;}\n" +
+                "@font-face\n" +
+                "\t{font-family:\"\\@微软雅黑\";\n" +
+                "\tmso-font-charset:134;\n" +
+                "\tmso-generic-font-family:swiss;\n" +
+                "\tmso-font-pitch:variable;\n" +
+                "\tmso-font-signature:-2147483001 718224464 22 0 262175 0;}\n" +
+                " /* Style Definitions */\n" +
+                " p.MsoNormal, li.MsoNormal, div.MsoNormal\n" +
+                "\t{mso-style-unhide:no;\n" +
+                "\tmso-style-qformat:yes;\n" +
+                "\tmso-style-parent:\"\";\n" +
+                "\tmargin:0cm;\n" +
+                "\tmargin-bottom:.0001pt;\n" +
+                "\ttext-align:justify;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:10.5pt;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-bidi-font-family:宋体;}\n" +
+                "a:link, span.MsoHyperlink\n" +
+                "\t{mso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tcolor:#0563C1;\n" +
+                "\ttext-decoration:underline;\n" +
+                "\ttext-underline:single;}\n" +
+                "a:visited, span.MsoHyperlinkFollowed\n" +
+                "\t{mso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tcolor:#954F72;\n" +
+                "\ttext-decoration:underline;\n" +
+                "\ttext-underline:single;}\n" +
+                "p.msonormal0, li.msonormal0, div.msonormal0\n" +
+                "\t{mso-style-name:msonormal;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tmso-margin-top-alt:auto;\n" +
+                "\tmargin-right:0cm;\n" +
+                "\tmso-margin-bottom-alt:auto;\n" +
+                "\tmargin-left:0cm;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:12.0pt;\n" +
+                "\tfont-family:宋体;\n" +
+                "\tmso-bidi-font-family:宋体;}\n" +
+                "span.EmailStyle18\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle19\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle20\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle21\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle22\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle23\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle24\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle25\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle26\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle27\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                "span.EmailStyle28\n" +
+                "\t{mso-style-type:personal;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-unhide:no;\n" +
+                "\tfont-family:等线;\n" +
+                "\tmso-ascii-font-family:等线;\n" +
+                "\tmso-fareast-font-family:等线;\n" +
+                "\tmso-hansi-font-family:等线;\n" +
+                "\tcolor:windowtext;}\n" +
+                ".MsoChpDefault\n" +
+                "\t{mso-style-type:export-only;\n" +
+                "\tmso-default-props:yes;\n" +
+                "\tfont-size:10.0pt;\n" +
+                "\tmso-ansi-font-size:10.0pt;\n" +
+                "\tmso-bidi-font-size:10.0pt;\n" +
+                "\tmso-ascii-font-family:\"Times New Roman\";\n" +
+                "\tmso-fareast-font-family:\"Times New Roman\";\n" +
+                "\tmso-hansi-font-family:\"Times New Roman\";\n" +
+                "\tmso-font-kerning:0pt;}\n" +
+                "@page WordSection1\n" +
+                "\t{size:612.0pt 792.0pt;\n" +
+                "\tmargin:72.0pt 90.0pt 72.0pt 90.0pt;\n" +
+                "\tmso-header-margin:36.0pt;\n" +
+                "\tmso-footer-margin:36.0pt;\n" +
+                "\tmso-paper-source:0;}\n" +
+                "div.WordSection1\n" +
+                "\t{page:WordSection1;}\n" +
+                "-->\n" +
+                "</style>\n" +
+                "<!--[if gte mso 10]>\n" +
+                "<style>\n" +
+                " /* Style Definitions */\n" +
+                " table.MsoNormalTable\n" +
+                "\t{mso-style-name:普通表格;\n" +
+                "\tmso-tstyle-rowband-size:0;\n" +
+                "\tmso-tstyle-colband-size:0;\n" +
+                "\tmso-style-noshow:yes;\n" +
+                "\tmso-style-priority:99;\n" +
+                "\tmso-style-parent:\"\";\n" +
+                "\tmso-padding-alt:0cm 5.4pt 0cm 5.4pt;\n" +
+                "\tmso-para-margin:0cm;\n" +
+                "\tmso-para-margin-bottom:.0001pt;\n" +
+                "\tmso-pagination:widow-orphan;\n" +
+                "\tfont-size:10.0pt;\n" +
+                "\tfont-family:\"Times New Roman\",serif;}\n" +
+                "</style>\n" +
+                "<![endif]--><!--[if gte mso 9]><xml>\n" +
+                " <o:shapedefaults v:ext=\"edit\" spidmax=\"1026\"/>\n" +
+                "</xml><![endif]--><!--[if gte mso 9]><xml>\n" +
+                " <o:shapelayout v:ext=\"edit\">\n" +
+                "  <o:idmap v:ext=\"edit\" data=\"1\"/>\n" +
+                " </o:shapelayout></xml><![endif]-->\n" +
+                "</head>\n" +
+                "\n" +
+                "<body lang=ZH-CN link=\"#0563C1\" vlink=\"#954F72\" style='tab-interval:21.0pt;\n" +
+                "text-justify-trim:punctuation'>\n" +
+                "\n" +
+                "<div class=WordSection1>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal align=left style='text-align:left'><span style='font-family:\n" +
+                "\"微软雅黑\",sans-serif'>尊敬的用户您好，</span><span lang=EN-US style='font-size:11.0pt'><o:p></o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US style='font-family:\"微软雅黑\",sans-serif'><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>您在财务共享当前共有<span\n" +
+                "lang=EN-US>2</span>条<span style='color:red'>月结待办</span>工单，请及时登录财务共享平台<span\n" +
+                "lang=EN-US><a href=\"https://fssc.anta.com/\">https://fssc.anta.com/</a> </span>或\n" +
+                "智行安踏<span lang=EN-US>APP-</span>财务共享进行处理！<span lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>为满足月结时效要求，<span\n" +
+                "style='color:red'>月结期间</span>工单在本环节的审批等待时长为<span lang=EN-US>4</span>小时（<span\n" +
+                "lang=EN-US>8</span>：<span lang=EN-US>00-20</span>：<span lang=EN-US>00</span>内），如您未及时审核处理，工单将在超<span\n" +
+                "lang=EN-US>4</span>小时等待后<b><span style='color:red'>自动通过本环节审批</span></b>，流转至下一环节！<span\n" +
+                "lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>明细如下：<span\n" +
+                "lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=1299\n" +
+                " style='width:974.0pt;margin-left:-.15pt;border-collapse:collapse;mso-yfti-tbllook:\n" +
+                " 1184;mso-padding-alt:0cm 0cm 0cm 0cm'>\n" +
+                " <tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;height:15.0pt'>\n" +
+                "  <td width=151 nowrap style='width:113.15pt;border:solid windowtext 1.0pt;\n" +
+                "  background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>单据名称<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=137 nowrap style='width:102.85pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>单据编号<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>提单人<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>到达待办时间<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=112 style='width:84.0pt;border:solid windowtext 1.0pt;border-left:\n" +
+                "  none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>金额合计<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=187 nowrap style='width:140.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>业务类型<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                "  <td width=389 nowrap style='width:292.0pt;border:solid windowtext 1.0pt;\n" +
+                "  border-left:none;background:#C00000;padding:0cm 5.4pt 0cm 5.4pt;height:15.0pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><b><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:white'>标题<span lang=EN-US><o:p></o:p></span></span></b></p>\n" +
+                "  </td>\n" +
+                " </tr>" +
+                // 单据信息
+                lineContentBuilder +
+                " </table>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US style='font-family:\"微软雅黑\",sans-serif'><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span lang=EN-US><o:p>&nbsp;</o:p></span></p>\n" +
+                "\n" +
+                "<p class=MsoNormal><span style='font-family:\"微软雅黑\",sans-serif'>本邮件属系统邮件，请勿回复，有任何问题请联系\n" +
+                "<span lang=EN-US><a href=\"mailto:fssc@anta.com\">fssc@anta.com</a></span>，感谢您的合作！<span\n" +
+                "lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "\n" +
+                "</div>\n" +
+                "\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>\n";
+    }
+
+
+    /**
+     *  单行单据生成
+     * @return
+     */
+    private static String generateBookLineContent(TaskForcedEndVo taskForcedEndVo) {
+        return " <tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes;height:16.5pt'>\n" +
+                "  <td width=141 nowrap style='width:106.1pt;border:solid windowtext 1.0pt;\n" +
+                "  border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=left style='text-align:left'><span lang=EN-US\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getBoName()+"<span lang=EN-US><o:p></o:p></span></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=147 nowrap style='width:109.9pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getBono()+"<o:p></o:p></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><span\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getAppLicant()+"<o:p></o:p></span></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=161 nowrap style='width:121.0pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getCreateTime()+"<o:p></o:p></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=112 style='width:84.0pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=center style='text-align:center'><span lang=EN-US\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getOriginalamount()+"<o:p></o:p></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=187 nowrap style='width:140.0pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=left style='text-align:left'><span style='font-family:\n" +
+                "  \"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getBusinessType()+"<o:p></o:p></span></span></p>\n" +
+                "  </td>\n" +
+                "  <td width=389 nowrap style='width:292.0pt;border-top:none;border-left:none;\n" +
+                "  border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;\n" +
+                "  padding:0cm 5.4pt 0cm 5.4pt;height:16.5pt'>\n" +
+                "  <p class=MsoNormal align=left style='text-align:left'><span lang=EN-US\n" +
+                "  style='font-family:\"微软雅黑\",sans-serif;color:black'>"+taskForcedEndVo.getTitle()+"<o:p></o:p></span></span></p>\n" +
+                "  </td>\n" +
+                " </tr>";
+    }
+
+
+}
+
+
+
+
+
+package com.epoch.workflow.vo;
+
+public class TaskForcedEndVo {
+    private Long  taskId;
+    private String  createTime;
+    private String  boName;
+    private String  bono;
+    private String  appLicant;
+    private String originalamount;
+    private String  businessType;
+    private String  title;
+    private String  email;
+    private String  actorId;
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getBoName() {
+        return boName;
+    }
+
+    public void setBoName(String boName) {
+        this.boName = boName;
+    }
+
+    public String getBono() {
+        return bono;
+    }
+
+    public void setBono(String bono) {
+        this.bono = bono;
+    }
+
+    public String getAppLicant() {
+        return appLicant;
+    }
+
+    public void setAppLicant(String appLicant) {
+        this.appLicant = appLicant;
+    }
+
+    public String getOriginalamount() {
+        return originalamount;
+    }
+
+    public void setOriginalamount(String originalamount) {
+        this.originalamount = originalamount;
+    }
+
+    public String getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getActorId() {
+        return actorId;
+    }
+
+    public void setActorId(String actorId) {
+        this.actorId = actorId;
+    }
+}
+
