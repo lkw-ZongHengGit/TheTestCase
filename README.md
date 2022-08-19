@@ -970,8 +970,4 @@ public class TaskForcedEndVo {
     }
 }
 
-
-强制结单 - 系统设置的参数
-forced_approval_node：月结时需要强制自动审批的节点环节名称
-mandatory_type_days：描述:月结期间强制审批通过的单据类型以及各单据类型执行的天数
-beforehand_send_mail：审批月结待办工单邮件预提醒（到达待办后一个小时）
+http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=0f3639357655ecca2efb241b426252041e045850545b0705041b0d51505a480205060d18040701041c030d00525a575052030d0604626d3650584d544b1504443108&code=1695ebe6&fid=72/2ae19b35-4d58-4404-aed2-545782fc543a&fid=72/2ae19b35-4d58-4404-aed2-545782fc543a
