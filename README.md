@@ -970,3 +970,25 @@ public class TaskForcedEndVo {
     }
 }
 http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=5b376338aa00ec9f7afa7e16163652514a55565c50045307501a550b0904485704060515080001544800560f500255025001510907366d63045917591f4104116509&code=e7c816ec&fid=72/b5da26d5-6382-4a1f-96d7-757a40a56216&fid=72/b5da26d5-6382-4a1f-96d7-757a40a56216&fid=72/b5da26d5-6382-4a1f-96d7-757a40a56216&fid=72/b5da26d5-6382-4a1f-96d7-757a40a56216&fid=72/b5da26d5-6382-4a1f-96d7-757a40a56216
+
+
+
+
+
+
+
+
+    //校验参数是否合法
+    private boolean checkReqParm(String parm){
+        if(StringUtil.isBlank(parm)){
+            return false;
+        }
+        String regEx = "^[a-zA-Z0-9_$#,\\s ]+$";
+        Pattern p= Pattern.compile(regEx);
+        Matcher m=p.matcher(parm);
+        if(!m.matches()) {
+            return true;
+        }else {
+            return false;
+        }
+    }
