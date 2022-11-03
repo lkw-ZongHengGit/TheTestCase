@@ -992,3 +992,15 @@ http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=5b376338aa00ec9f
             return false;
         }
     }
+
+
+
+ npm config set registry http://192.168.92.29:4873/
+ 
+ rm -rf node_modules
+ 
+  npm install
+  
+  npm run serve
+  
+  
