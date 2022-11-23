@@ -1004,3 +1004,4 @@ http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=5b376338aa00ec9f
   npm run serve
   
   
+  http://192.168.99.59:8888/fsscHttp/consistency/synCompanyDimensions.do
