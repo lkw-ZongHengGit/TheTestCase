@@ -8,7 +8,7 @@ gmall-user :ÓÃ»§·þÎñ,¶Ë¿Ú8080
 测试,增加job1
 
 
-[ERROR] Failed to execute goal on project ifs-sc-gateway: Could not resolve dependencies for project com.lc:ifs-sc-gateway:jar:1.0.0: Failed to collect dependencies at com.lc:lc-config:jar:1.0.0: Failed to read artifact descriptor for com.lc:lc-config:jar:1.0.0: Could not transfer artifact com.lc:lc-config:pom:1.0.0 from/to lingcai (http://maven.mirror.lingcai.cn/repository/maven-public/): maven.mirror.lingcai.cn: Unknown host maven.mirror.lingcai.cn -> [Help 1]
+[ERROR]     Child module D:\encode\antifs\ifs-anta-gateway\lc-commons\lc-encrypt-spring-boot-stater of D:\encode\antifs\ifs-anta-gateway\lc-commons\pom.xml does not exist
 
 mapper层的方法：
 
