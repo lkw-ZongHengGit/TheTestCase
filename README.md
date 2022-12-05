@@ -8,7 +8,8 @@ gmall-user :ÓÃ»§·þÎñ,¶Ë¿Ú8080
 测试,增加job1
 
 
-[ERROR]     Child module D:\encode\antifs\ifs-anta-gateway\lc-commons\lc-encrypt-spring-boot-stater of D:\encode\antifs\ifs-anta-gateway\lc-commons\pom.xml does not exist
+[ERROR] Failed to execute goal on project lc-redis-spring-boot-starter: Could not resolve dependencies for project com.lc:lc-redis-spring-boot-starter:jar:1.0.0: Failed to collect dependencies at com.lc:lc-common-core:jar:1.0.0: Failed to read artifact descriptor for com.lc:lc-common-core:jar:1.0.0: Could not transfer artifact com.lc:lc-common-core:pom:1.0.0 from/to lingcai (http://maven.mirror.lingcai.cn/repository/maven-public/): maven.mirror.lingcai.cn: Unknown host maven.mirror.lingcai.cn -> [Help 1]
+
 
 mapper层的方法：
 
