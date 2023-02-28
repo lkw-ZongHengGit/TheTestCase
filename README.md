@@ -1014,3 +1014,207 @@ http://mail.qq.com/cgi-bin/ftnExs_download?t=exs_ftn_download&k=5b376338aa00ec9f
 所以未来的成就也不尽相同，方向对了，平台更高，成就更高。方向一般且平常的，一辈子也过不上人上人的日子，方向错误的，可能把后半生都坑进去了。
 证明方向是否正确，也许需要几十年的时间，眼下更重要的是，趁着还有冲劲、还年轻、还盲目时，一往无前的冲，兴许稀里糊涂就冲出去了。
 若你不年轻、没冲劲，那就需要自己反省沉思改过，因为你必须让自己冲，强迫自己加快脚步，时间不等人。这个过程或许是痛苦的，但也在积蓄力量，直到某天厚积薄发。。
+
+
+
+
+ public static void main(String[] args) {
+        List<String> boDataIds=Arrays.asList("1");
+        List<CommonResponse.ResResult> result = boDataIds.stream().map(boDataId->CommonResponse.builderSuccessResResult().setCode(boDataId)).collect(Collectors.toList());
+        List<StreamUser> list = Arrays.asList(
+            new StreamUser("李晓燕","1","日本"),
+            new StreamUser("张大大","0","美国"),
+            new StreamUser("王庆峰","1","西藏"),
+            new StreamUser("李小三","0","重庆"),
+            new StreamUser("燕子李","1","挪威")
+        );
+     /*
+     * 场景：假设collect是一个组装好的失败list，现在需要对其设置失败的回写状态以及回写提示语，就可以用这种写法
+     * */
+        Map<String, Long> collect = list.stream().collect(Collectors.groupingBy(map -> map.getSex(), Collectors.counting()));
+        //输出结果：{0=2, 1=3}
+        System.out.println(collect);
+        //输出结果：[ResResult{code='1', synStatus='0', sysResult='OK'}]
+        System.out.println(result);
+        result.stream().filter(res->collect.containsKey(res.getCode())).forEach(res->res.setSynStatus(CommonResponse.FAILED).setSysResult("单据状态不匹配，无法执行操作，请检查!"));
+        //输出结果：[ResResult{code='1', synStatus='1', sysResult='单据状态不匹配，无法执行操作，请检查!'}]
+        System.out.println(result);
+
+
+
+    }
+
+}
+
+
+package com.proinnova.dim.entity;
+
+import lombok.Data;
+
+/**
+ * @BelongsProject: anta
+ * @BelongsPackage: com.proinnova.dim.entity
+ * @Author: lkw
+ * @CreateTime: 2023-02-23  09:38
+ * @Description: TODO
+ * @Version: 1.0
+ */
+@Data
+public class StreamUser {
+    private String name;
+    private String sex;
+    private String address;
+
+    public StreamUser(String name, String sex, String address) {
+        this.name = name;
+        this.sex = sex;
+        this.address = address;
+    }
+}
+
+
+
+package com.proinnova.dim.entity;
+
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @BelongsProject: anta
+ * @BelongsPackage: com.proinnova.dim.entity
+ * @Author: lkw
+ * @CreateTime: 2023-02-23  09:48
+ * @Description: TODO
+ * @Version: 1.0
+ */
+@Data
+public class CommonResponse implements Serializable {
+    /**
+     * 报文状态，s成功 E错误
+     */
+    private String status = "S";
+    /**
+     * 返回报文结构
+     */
+    private List<ResResult> result = new ArrayList<>();
+    /**
+     * 错误编码
+     */
+    private String errCode = "" ;
+    /**
+     * 错误消息
+     */
+    private String errMsg = "";
+
+    /**
+     * 添加应答结果
+     * @param code  唯一编码
+     * @param synStatus 应答状态
+     * @param sysResult 应答描述
+     * @return
+     */
+    public CommonResponse addResult(String code, String synStatus, String sysResult){
+        result.add(new ResResult(code,synStatus,sysResult));
+        return this;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public CommonResponse setStatus(String status) {
+        this.status = status;
+        return this;
+    }
+
+    public List<ResResult> getResult() {
+        return result;
+    }
+
+    public CommonResponse setResult(List<ResResult> result) {
+        this.result = result;
+        return this;
+    }
+
+    public String getErrCode() {
+        return errCode;
+    }
+
+    public CommonResponse setErrCode(String errCode) {
+        this.errCode = errCode;
+        return this;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
+
+    public CommonResponse setErrMsg(String errMsg) {
+        this.errMsg = errMsg;
+        return this;
+    }
+
+    public static class ResResult {
+        private String  code;
+        private String synStatus = "0";
+        private String sysResult = "OK";
+
+        public ResResult() {
+        }
+
+        public ResResult(String code, String synStatus, String sysResult) {
+            this.code = code;
+            this.synStatus = synStatus;
+            this.sysResult = sysResult;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public ResResult setCode(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public String getSynStatus() {
+            return synStatus;
+        }
+
+        public ResResult setSynStatus(String synStatus) {
+            this.synStatus = synStatus;
+            return this;
+        }
+
+        public String getSysResult() {
+            return sysResult;
+        }
+
+        public ResResult setSysResult(String sysResult) {
+            this.sysResult = sysResult;
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return "ResResult{" +
+                    "code='" + code + '\'' +
+                    ", synStatus='" + synStatus + '\'' +
+                    ", sysResult='" + sysResult + '\'' +
+                    '}';
+        }
+    }
+
+    public static ResResult builderSuccessResResult(){
+        return new CommonResponse.ResResult("","0","OK");
+    }
+
+    public static final String FAILED = "1";
+}
+
+
+
+
