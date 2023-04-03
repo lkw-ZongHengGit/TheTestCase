@@ -1208,6 +1208,11 @@ public class CommonResponse implements Serializable {
         }
     }
 
+
+https://openapi.baiwang.com/router/rest?method=baiwang.output.format.queryQdInvoice&version=6.0&appKey=10000487&format=json&timestamp=1680487804996&token=35e342ab-e8e7-4621-beea-77c2b0d66dbd&sign=A66084DB34880CBFFF3A4E716762B3AE
+
+
+
     public static ResResult builderSuccessResResult(){
         return new CommonResponse.ResResult("","0","OK");
     }
